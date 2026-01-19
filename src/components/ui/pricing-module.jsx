@@ -42,12 +42,7 @@ export function PricingModule({
             checked={isAnnual}
             onCheckedChange={(checked) => setIsAnnual(checked)}
           >
-            <label
-              htmlFor="billing-toggle"
-              className="text-sm text-muted-foreground cursor-pointer"
-            >
-              {annualBillingLabel}
-            </label>
+            {annualBillingLabel} {/* Pass label directly as child */}
           </Switch>
         </div>
 

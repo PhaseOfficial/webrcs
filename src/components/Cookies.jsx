@@ -34,7 +34,7 @@ const CookieConsent = () => {
       {showIcon && !visible && (
         <div
           onClick={reopenMessage}
-          className="fixed bottom-6 left-4 bg-pink-600 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-pink-700 z-50 transition-all animate-bounce"
+          className="fixed bottom-6 left-4 bg-red-500 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-red-700 z-50 transition-all animate-bounce"
           title="Manage Cookie Settings"
         >
           <FaCookieBite size={22} />
@@ -58,7 +58,7 @@ const CookieConsent = () => {
 
             <button
               onClick={handleAccept}
-              className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm transition"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition"
             >
               Accept
             </button>

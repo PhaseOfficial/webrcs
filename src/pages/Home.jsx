@@ -5,7 +5,10 @@ import '../App.css';
 import Contactus from '../components/Contactus';
 import Footer from '../components/footer';
 // import Companies from '../components/companies';
+import DomainSearch from '../components/DomainSearch';
+import { useThemeClasses } from '../components/ThemeAware';
 
+import ServicesOverview from '../components/ServicesOverview'; // Added back
 import Trust from '../components/Trust';
 import PortfolioShowcase from '../components/PortfolioShowcase';
 import TeamExpertise from '../components/TeamExpertise';
@@ -19,10 +22,13 @@ export default function Home() {
             <Navbar />
             
             <HeroSection className=""/>
+            <DomainSearch themeClasses={useThemeClasses()} />
+            <Trust className=""/>
+            <ServicesOverview className=""/> {/* Added back */}
             
             {/* <Explore className=""/> */}
             
-            <Trust className=""/>
+            
             <PortfolioShowcase className=""/>
             <TeamExpertise className=""/>
             <Testimonials className="mt-20"/>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaComments, FaPaperPlane, FaWhatsapp } from "react-icons/fa";
 // ❌ Removed GoogleGenerativeAI import
 import contextData from "./contextPrompts.json";
+import Logo from "../assets/Vybrant brand logo.png";
 import { supabase } from "../lib/supabaseClient";
 
 const RedCupChatBot = () => {
@@ -217,7 +218,7 @@ const RedCupChatBot = () => {
         <button
           onClick={toggleChat}
           data-track="chat_widget_open"
-          className="bg-brand-DEFAULT text-white p-4 rounded-full shadow-lg hover:bg-brand-dark animate-bounce transform hover:scale-105 transition-all"
+          className="bg-red-500 text-white p-4 rounded-full shadow-lg hover:bg-brand-dark animate-bounce transform hover:scale-105 transition-all"
         >
           <FaComments size={20} />
         </button>
@@ -226,8 +227,9 @@ const RedCupChatBot = () => {
       {isOpen && (
         <div className="fade-up w-80 md:w-96 h-[470px] bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col border border-gray-200">
           {/* Header */}
-          <div className="bg-brand-DEFAULT text-white flex justify-between items-center px-4 py-3">
-            <h3 className="font-bold text-lg">Red Cup AI</h3>
+          <div className="bg-gray-100 flex justify-between items-center px-4 py-3">
+          <img src={Logo} alt="Red Cup Logo" className="h-8 mr-2"/>
+            <h3 className="font-bold text-red-500 text-lg">AI Chat</h3>
             <button 
               onClick={toggleChat} 
               data-track="chat_widget_close"
@@ -243,7 +245,7 @@ const RedCupChatBot = () => {
                 <div
                   className={`px-4 py-2 rounded-xl max-w-[80%] text-sm shadow ${
                     msg.sender === "user"
-                      ? "bg-brand-DEFAULT text-white"
+                      ? "bg-green-200 text-gray-900"
                       : "bg-neutral-100 text-neutral-800"
                   }`}
                   dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }}
@@ -264,23 +266,23 @@ const RedCupChatBot = () => {
             <p className="text-gray-700">Please provide your contact details:</p>
               <input
                 type="text"
-                placeholder="Your Name"
+                placeholder="Your Name (e.g., John Doe)"
                 required
-                className="w-full p-2 border text-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 text-gray-700 rounded-md"
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
               <input
                 type="email"
-                placeholder="Your Email"
+                placeholder="Your Email (e.g., john.doe@example.com)"
                 required
-                className="w-full p-2 border text-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 text-gray-700 rounded-md"
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
               <input
                 type="tel"
-                placeholder="Your Phone Number"
+                placeholder="Your Phone Number (e.g., +1234567890)"
                 required
-                className="w-full p-2 border text-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 text-gray-700 rounded-md"
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               />
               <button
@@ -294,7 +296,7 @@ const RedCupChatBot = () => {
 
           {/* Input */}
           {!formVisible && (
-            <form onSubmit={handleSend} className="flex p-3 border-t bg-white items-center">
+            <form onSubmit={handleSend} className="flex p-3 border-t bg-white text-black items-center">
               <input
                 type="text"
                 placeholder="Ask about web development..."
@@ -314,11 +316,11 @@ const RedCupChatBot = () => {
           )}
 
           {/* WhatsApp Button */}
-          <div className="border-t bg-gray-50 flex justify-center items-center p-3">
+          <div className="border-t bg-green-300 flex justify-center items-center p-3">
             <button
               onClick={handleWhatsAppClick}
               data-track="chat_whatsapp_redirect"
-              className="flex items-center space-x-2 text-neutral-600 font-semibold hover:text-neutral-700"
+              className="flex items-center space-x-2 text-brand-DEFAULT font-semibold hover:text-brand-dark"
             >
               <FaWhatsapp size={22} />
               <span>Chat on WhatsApp</span>

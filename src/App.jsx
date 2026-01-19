@@ -102,7 +102,7 @@ const App = () => {
           )}
           
           {/* 🎨 Theme Indicator */}
-          <ThemeIndicator />
+          {/* <ThemeIndicator /> */}
         </div>
       </ThemeWrapper>
     </ThemeProvider>

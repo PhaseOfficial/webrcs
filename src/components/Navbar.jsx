@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 import GlassSurface from './GlassSurface';
 import logo from "../assets/Vybrant brand LOGO.png";
 import { useTheme } from '../contexts/ThemeContext';
-import { Sun, Moon, Sparkles } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react'; // Removed Sparkles
 
 const themeIcons = {
   light: <Sun className="w-6 h-6 text-yellow-400" />,
   dark: <Moon className="w-6 h-6 text-blue-400" />,
-  neutral: <Sparkles className="w-6 h-6 text-amber-400" />
+  // Removed neutral icon
 };
 
 const ThemeSwitcher = () => {
@@ -24,19 +24,21 @@ const ThemeSwitcher = () => {
 
   return (
     <div className="flex gap-2">
-      {themeNames.map((theme) => (
-        <button
-          key={theme}
-          onClick={() => handleThemeSwitch(theme)}
-          className={`p-2 rounded-lg transition-all duration-300 flex justify-center items-center ${
-            currentTheme === theme
-              ? 'bg-white/30 shadow-lg'
-              : 'bg-white/10 hover:bg-white/20'
-          }`}
-          title={`Switch to ${theme} theme`}
-        >
-          {themeIcons[theme]}
-        </button>
+      {themeNames
+        .filter((theme) => theme !== 'neutral') // Explicitly filter out neutral
+        .map((theme) => (
+          <button
+            key={theme}
+            onClick={() => handleThemeSwitch(theme)}
+            className={`p-2 rounded-lg transition-all duration-300 flex justify-center items-center ${
+              currentTheme === theme
+                ? 'bg-white/30 shadow-lg'
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
+            title={`Switch to ${theme} theme`}
+          >
+            {themeIcons[theme]}
+          </button>
       ))}
     </div>
   );
