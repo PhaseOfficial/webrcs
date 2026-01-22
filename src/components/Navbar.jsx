@@ -1,17 +1,26 @@
 import { useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 import GlassSurface from './GlassSurface';
 import logo from "../assets/Vybrant brand LOGO.png";
 import { useTheme } from '../contexts/ThemeContext';
-import { Sun, Moon } from 'lucide-react'; // Removed Sparkles
+import { Sun, Moon } from 'lucide-react'; 
 
 const themeIcons = {
   light: <Sun className="w-6 h-6 text-yellow-400" />,
   dark: <Moon className="w-6 h-6 text-blue-400" />,
-  // Removed neutral icon
 };
+
+const navLinks = [
+  { to: '/', text: 'Home', type: 'route' },
+  { to: '/About', text: 'About Us', type: 'route' },
+  { to: 'services', text: 'Services', type: 'scroll' },
+  { to: '/Careers', text: 'Careers', type: 'route' },
+  { to: 'contact', text: 'Contact Us', type: 'scroll' },
+  { to: '/blog', text: 'Blog', type: 'route' },
+];
 
 const ThemeSwitcher = () => {
   const { currentTheme, themeNames, switchTheme } = useTheme();
@@ -25,7 +34,7 @@ const ThemeSwitcher = () => {
   return (
     <div className="flex gap-2">
       {themeNames
-        .filter((theme) => theme !== 'neutral') // Explicitly filter out neutral
+        .filter((theme) => theme !== 'neutral') 
         .map((theme) => (
           <button
             key={theme}
@@ -39,13 +48,16 @@ const ThemeSwitcher = () => {
           >
             {themeIcons[theme]}
           </button>
-      ))}
+        ))}
     </div>
   );
 };
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const linkClass = "hover:text-black dark:hover:text-white transition-colors";
+  const activeLinkClass = "text-black dark:text-white";
 
   return (
     <>
@@ -60,30 +72,45 @@ export default function Navbar() {
       >
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <RouterLink to="/" className="flex items-center">
             <img
               src={logo}
               alt="Company Logo"
               className="h-10 w-auto"
             />
-          </Link>
+          </RouterLink>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-6 text-black font-montserrat">
-            <Link to="/" className="hover:text-gray-600">Home</Link>
-            <Link to="/About" className="hover:text-gray-600">About Us</Link>
-            <Link to="/Services" className="hover:text-gray-600">Services</Link>
-            <Link to="/Supportedliving" className="hover:text-gray-600">Supported Living</Link>
-            <Link to="/Careers" className="hover:text-gray-600">Careers</Link>
-            <Link to="/Contact" className="hover:text-gray-600">Contact Us</Link>
-            <Link to="/blog" className="hover:text-gray-600">Blog</Link>
+          <div className="hidden md:flex items-center space-x-6 text-gray-800 dark:text-gray-500 font-montserrat font-medium">
+            {navLinks.map((link) => (
+              link.type === 'route' ? (
+                <RouterLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) => `${linkClass} ${isActive ? activeLinkClass : ''}`}
+                >
+                  {link.text}
+                </RouterLink>
+              ) : (
+                <ScrollLink
+                  key={link.to}
+                  to={link.to}
+                  smooth={true}
+                  duration={500}
+                  offset={-70}
+                  className={`${linkClass} cursor-pointer`}
+                >
+                  {link.text}
+                </ScrollLink>
+              )
+            ))}
             <ThemeSwitcher />
           </div>
 
           {/* Mobile Menu Button */}
           <button
             data-track="mobile_menu_open"
-            className="md:hidden flex items-center px-3 py-2 text-black hover:text-gray-500"
+            className="md:hidden flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
             onClick={() => setIsOpen(true)}
           >
             <GiHamburgerMenu size={26} />
@@ -93,24 +120,41 @@ export default function Navbar() {
 
       {/* Fullscreen Mobile Menu */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center space-y-8 text-black text-3xl font-montserrat z-50 transition-all duration-300">
+        <div className="fixed inset-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md flex flex-col items-center justify-center space-y-8 text-gray-700 dark:text-gray-300 text-3xl font-montserrat z-50 transition-all duration-300">
           {/* Close Button */}
           <button
             data-track="mobile_menu_close"
-            className="absolute top-6 right-6 text-black hover:text-gray-500"
+            className="absolute top-6 right-6 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
             onClick={() => setIsOpen(false)}
           >
             <IoClose size={36} />
           </button>
 
           {/* Mobile Links */}
-          <Link to="/" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Home</Link>
-          <Link to="/About" onClick={() => setIsOpen(false)} className="hover:text-gray-600">About Us</Link>
-          <Link to="/Services" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Services</Link>
-          <Link to="/Supportedliving" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Supported Living</Link>
-          <Link to="/Careers" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Careers</Link>
-          <Link to="/Contact" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Contact Us</Link>
-          <Link to="/blog" onClick={() => setIsOpen(false)} className="hover:text-gray-600">Blog</Link>
+          {navLinks.map((link) => (
+            link.type === 'route' ? (
+              <RouterLink
+                key={link.to}
+                to={link.to}
+                onClick={() => setIsOpen(false)}
+                className={({ isActive }) => `${linkClass} ${isActive ? activeLinkClass : ''}`}
+              >
+                {link.text}
+              </RouterLink>
+            ) : (
+              <ScrollLink
+                key={link.to}
+                to={link.to}
+                smooth={true}
+                duration={500}
+                offset={-70}
+                onClick={() => setIsOpen(false)}
+                className={`${linkClass} cursor-pointer`}
+              >
+                {link.text}
+              </ScrollLink>
+            )
+          ))}
           <div className="pt-8">
             <ThemeSwitcher />
           </div>

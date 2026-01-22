@@ -35,7 +35,7 @@ const RedCupChatBot = () => {
   const toggleChat = () => setIsOpen(!isOpen);
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = "447828402043";
+    const phoneNumber = "+263788147289";
     const text = encodeURIComponent("Hello! I'd like to ask about your services.");
     window.open(`https://wa.me/${phoneNumber}?text=${text}`, "_blank");
   };
@@ -197,7 +197,7 @@ const RedCupChatBot = () => {
       .replace(/\n/g, "<br>");
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className={`fixed z-50 font-sans ${isOpen ? 'inset-0 md:bottom-6 md:right-6 md:inset-auto' : 'bottom-6 right-6'}`}>
       <style>{`
         @keyframes fadeUp {
           from {
@@ -225,7 +225,7 @@ const RedCupChatBot = () => {
       )}
 
       {isOpen && (
-        <div className="fade-up w-80 md:w-96 h-[470px] bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col border border-gray-200">
+        <div className="fade-up w-full h-full md:w-96 md:h-[470px] bg-white md:shadow-2xl md:rounded-2xl overflow-hidden flex flex-col border-gray-200 md:border">
           {/* Header */}
           <div className="bg-gray-100 flex justify-between items-center px-4 py-3">
           <img src={Logo} alt="Red Cup Logo" className="h-8 mr-2"/>
@@ -233,7 +233,7 @@ const RedCupChatBot = () => {
             <button 
               onClick={toggleChat} 
               data-track="chat_widget_close"
-              className="text-2xl font-light hover:text-gray-100">
+              className="text-2xl text-gray-500 hover:text-gray-100">
               &times;
             </button>
           </div>
@@ -308,7 +308,7 @@ const RedCupChatBot = () => {
                 type="submit"
                 disabled={!input.trim()}
                 data-track="chat_message_send"
-                className="ml-2 bg-brand-DEFAULT text-white p-2 rounded-full hover:bg-brand-dark"
+                className="ml-2 bg-red-500 text-white p-2 rounded-full hover:bg-brand-dark"
               >
                 <FaPaperPlane size={14} />
               </button>

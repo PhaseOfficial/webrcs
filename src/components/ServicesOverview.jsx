@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Code, ShoppingCart, Building2, Check, Mail } from 'lucide-react'; 
+import ZimraLogo from '../assets/Zimra-logo.webp';
 import { useThemeClasses } from './ThemeAware';
 import { Button } from './button'; 
 import {
@@ -82,6 +83,22 @@ const developmentServices = [
       "Optional: AI Chatbot integration ($100 extra)"
     ],
     highlights: ["Conversion-focused", "Modern design", "Sales optimization"]
+  },
+  {
+    icon: () => <img src={ZimraLogo} alt="ZIMRA Logo" className="w-6 h-6" />,
+    title: "ZIMRA Fiscalisation & Integration",
+    subtitle: "For seamless compliance and workflow",
+    description: "Server-to-server fiscalisation setup for ZIMRA, including Excel, POS systems customization, Microsoft 365 integration with webhooks, and other similar platforms.",
+    price: "Custom",
+    billingCycle: "per-project",
+    features: [
+      "ZIMRA server-to-server fiscalisation",
+      "Excel & POS systems integration",
+      "Microsoft 365 webhook setup",
+      "Custom workflow automation",
+      "Compliance consulting"
+    ],
+    highlights: ["Tax compliance", "Process automation", "System integration"]
   }
 ];
 

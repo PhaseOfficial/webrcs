@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Check, X, Loader2, Globe, ShoppingCart, AlertCircle, ChevronDown } from 'lucide-react';
 import { Button } from './button'; 
 import { cn } from '../lib/utils'; 
+import DotGrid from './DotGrid';
 
 export default function DomainSearch({ themeClasses }) {
   const [domain, setDomain] = useState('');
@@ -43,11 +44,15 @@ export default function DomainSearch({ themeClasses }) {
   };
 
   return (
-    <section className="w-full max-w-4xl mx-auto py-12 px-4">
-      <div className={cn(
-        "p-8 md:p-12 rounded-3xl shadow-sm border transition-all duration-300",
-        "bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"
-      )}>
+    <section className="relative w-full py-12 px-4">
+      <div className="absolute inset-0 z-0">
+        <DotGrid />
+      </div>
+      <div className="max-w-4xl mx-auto">
+        <div className={cn(
+          "relative z-10 p-8 md:p-12 rounded-3xl shadow-sm border transition-all duration-300",
+          "bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"
+        )}>
         
         <div className="text-center mb-8">
           <h3 className={cn("text-2xl md:text-3xl font-bold mb-3", "text-neutral-900 dark:text-neutral-100")}>
@@ -233,6 +238,7 @@ export default function DomainSearch({ themeClasses }) {
           </div>
         </div>
 
+        </div>
       </div>
     </section>
   );

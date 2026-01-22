@@ -15,7 +15,10 @@ const themes = {
       hover: 'hover:bg-neutral-300',
       card: 'bg-neutral-50',
       gradient: 'from-brand to-accent',
-      sectionBg: 'bg-neutral-100'
+      sectionBg: 'bg-neutral-100',
+      linesGradient: ['#E0E7FF', '#C7D2FE', '#A5B4FC'],
+      linesBackgroundColor: '#FFFFFF',
+      threadsColor: '#000000'
     }
   },
   dark: {
@@ -31,7 +34,10 @@ const themes = {
       hover: 'hover:bg-neutral-700',
       card: 'bg-neutral-800',
       gradient: 'from-accent to-brand',
-      sectionBg: 'bg-neutral-800'
+      sectionBg: 'bg-neutral-800',
+      linesGradient: ['#E91E63', '#9C27B0', '#673AB7'],
+      linesBackgroundColor: undefined,
+      threadsColor: '#FFFFFF'
     }
   },
   neutral: {
@@ -47,7 +53,10 @@ const themes = {
       hover: 'hover:bg-stone-200',
       card: 'bg-stone-50',
       gradient: 'from-amber-600 to-orange-600',
-      sectionBg: 'bg-stone-100'
+      sectionBg: 'bg-stone-100',
+      linesGradient: ['#FFD54F', '#FFB74D', '#FF9800'],
+      linesBackgroundColor: undefined,
+      threadsColor: '#000000'
     }
   }
 };
@@ -63,7 +72,7 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState('light');
+  const [currentTheme, setCurrentTheme] = useState('dark');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
@@ -88,7 +97,7 @@ export const ThemeProvider = ({ children }) => {
         setCurrentTheme(nextTheme);
         setIsTransitioning(false);
       }, 700); // Slower transition for a smoother effect
-    }, 120000); // 2 minutes = 120,000ms
+    }, 300000); // 5 minutes = 300,000ms
 
     return () => clearInterval(interval);
   }, [currentTheme]);

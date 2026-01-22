@@ -10,24 +10,77 @@ import {
   Award, 
   Clock, 
   Users, 
-  CheckCircle2
+  CheckCircle2,
+  Banknote,
+  FileCheck,
+  Smartphone,
+  MousePointerClick
 } from 'lucide-react';
 import { cn } from '../lib/utils'; 
+
+// === ICON HELPER COMPONENT ===
+const TechIcon = ({ name }) => {
+  // 1. Handle Local/Custom Integrations with Lucide Icons
+  if (name === 'Paynow') return <CreditCard className="w-4 h-4 text-blue-600" />;
+  if (name === 'Clicknpay') return <MousePointerClick className="w-4 h-4 text-purple-600" />;
+  if (name === 'ZIMRA Fiscalisation') return <FileCheck className="w-4 h-4 text-green-600" />;
+  if (name === 'EcoCash API') return <Smartphone className="w-4 h-4 text-blue-500" />;
+  if (name === 'InnBucks') return <Banknote className="w-4 h-4 text-orange-500" />;
+
+  // 2. Map names to SimpleIcons slugs
+  const slugMap = {
+    'React': 'react',
+    'Vue.js': 'vuedotjs',
+    'TypeScript': 'typescript',
+    'Next.js': 'nextdotjs',
+    'Tailwind CSS': 'tailwindcss',
+    'Framer Motion': 'framer',
+    'Node.js': 'nodedotjs',
+    'Python': 'python',
+    'Laravel': 'laravel',
+    'PostgreSQL': 'postgresql',
+    'MongoDB': 'mongodb',
+    'Redis': 'redis',
+    'AWS': 'amazonaws',
+    'Google Cloud': 'googlecloud',
+    'Docker': 'docker',
+    'Kubernetes': 'kubernetes',
+    'CI/CD': 'githubactions', // Using GitHub Actions as proxy icon for CI/CD
+    'Vercel': 'vercel',
+    'Shopify': 'shopify',
+    'Shopify Plus': 'shopify',
+    'WooCommerce': 'woocommerce',
+    'Magento': 'magento',
+    'PayPal': 'paypal',
+    'Stripe': 'stripe'
+  };
+
+  const slug = slugMap[name];
+  if (!slug) return null;
+
+  return (
+    <img 
+      src={`https://cdn.simpleicons.org/${slug}`} 
+      alt={`${name} icon`}
+      className="w-4 h-4 object-contain dark:invert" // Invert colors in dark mode for black logos like Next.js
+      loading="lazy"
+    />
+  );
+};
 
 // === COUNTER COMPONENT ===
 function Counter({ value, className }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
-  // Parse the number and the suffix (e.g., "150+" -> 150 and "+")
   const numericValue = parseInt(value.replace(/\D/g, '')) || 0;
-  const suffix = value.replace(/[0-9]/g, ''); // Extracts +, %, <, etc.
+  const suffix = value.replace(/[0-9]/g, ''); 
   
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, {
     damping: 30,
     stiffness: 100,
-    duration: 2 // Slower, smoother Apple-like ease
+    duration: 2 
   });
 
   useEffect(() => {
@@ -36,22 +89,18 @@ function Counter({ value, className }) {
     }
   }, [isInView, numericValue, motionValue]);
 
-  // Update text content directly for performance
   useEffect(() => {
     const unsubscribe = springValue.on("change", (latest) => {
       if (ref.current) {
-        // Check if original value started with special char (like <24h)
         const prefix = value.startsWith('<') ? '<' : '';
-        // Remove prefix from suffix to avoid duplication if regex caught it
         const cleanSuffix = suffix.replace('<', ''); 
-        
         ref.current.textContent = `${prefix}${Math.round(latest)}${cleanSuffix}`;
       }
     });
     return () => unsubscribe();
   }, [springValue, suffix, value]);
 
-  return <span ref={ref} className={className}>{0}{suffix}</span>;
+  return <span ref={ref} className={className}>0{suffix}</span>;
 }
 
 const techCategories = [
@@ -148,7 +197,6 @@ export default function TechCredentials() {
               <stat.icon strokeWidth={1.5} size={32} className="opacity-40 mb-4" />
               
               <div className={cn("text-5xl md:text-6xl font-extrabold mb-2 tracking-tighter tabular-nums", themeClasses.text)}>
-                {/* Replaced static text with Counter component */}
                 <Counter value={stat.value} />
               </div>
               
@@ -171,15 +219,6 @@ export default function TechCredentials() {
             "border-gray-100/50 dark:border-zinc-800/50" 
           )}
         >
-          <div className="text-center mb-16">
-             <p className="text-sm font-bold opacity-40 uppercase tracking-[0.2em] mb-4">Trusted by Leaders</p>
-             <div className="flex flex-wrap justify-center items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              {companyLogos.map((initials, idx) => (
-                 <div key={idx} className={cn("text-2xl font-bold", themeClasses.text)}>{initials}</div>
-              ))}
-             </div>
-          </div>
-
           <h3 className={cn("text-3xl font-bold text-center mb-12 tracking-tight", themeClasses.text)}>
             Our Technology Stack
           </h3>
@@ -200,12 +239,14 @@ export default function TechCredentials() {
                       key={tech}
                       whileHover={{ scale: 1.03 }}
                       className={cn(
-                        "px-4 py-2 rounded-xl text-[13px] font-semibold transition-all cursor-default border backdrop-blur-md",
+                        "pl-3 pr-4 py-2 rounded-xl text-[13px] font-semibold transition-all cursor-default border backdrop-blur-md flex items-center gap-2",
                         cat.isHighlight
                           ? "bg-blue-100 border-blue-200 text-blue-900 dark:bg-blue-900/40 dark:border-blue-800/50 dark:text-blue-200"
                           : "bg-gray-100/80 border-gray-200/60 text-gray-800 dark:bg-zinc-800/50 dark:border-zinc-700/30 dark:text-zinc-300"
                       )}
                     >
+                      {/* === RENDER LOGO === */}
+                      <TechIcon name={tech} />
                       {tech}
                     </motion.span>
                   ))}

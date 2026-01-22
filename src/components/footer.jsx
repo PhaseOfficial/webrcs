@@ -36,7 +36,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <div>
-            <p className="text-sm">&copy; 2025 Vybrant Care Services. All rights reserved.</p>
+            <p className="text-sm">&copy; 2025 Red Cup Series ~Web Series. All rights reserved.</p>
           </div>
         </div>
       </div>
