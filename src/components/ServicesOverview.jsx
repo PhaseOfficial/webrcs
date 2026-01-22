@@ -85,7 +85,7 @@ const developmentServices = [
     highlights: ["Conversion-focused", "Modern design", "Sales optimization"]
   },
   {
-    icon: () => <img src={ZimraLogo} alt="ZIMRA Logo" className="w-6 h-6" />,
+    icon: () => <img src={ZimraLogo} alt="ZIMRA Logo" className="w-10" />,
     title: "ZIMRA Fiscalisation & Integration",
     subtitle: "For seamless compliance and workflow",
     description: "Server-to-server fiscalisation setup for ZIMRA, including Excel, POS systems customization, Microsoft 365 integration with webhooks, and other similar platforms.",

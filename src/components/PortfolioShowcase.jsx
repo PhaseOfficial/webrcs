@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub } from 'react-icons/fa';
 import { 
   ExternalLink, 
   Github, 
@@ -405,14 +406,21 @@ export default function PortfolioShowcase() {
           transition={{ delay: 0.5 }}
           className="mt-20 text-center"
         >
-          <a 
+          <motion.a 
             href="https://github.com/phaseofficial" 
             target="_blank"
             rel="noopener noreferrer"
-            className={cn("group inline-flex items-center font-bold text-lg border-b-2 border-transparent hover:border-current transition-all pb-1", themeClasses.text)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={cn(
+              "group inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1",
+              themeClasses.button, 
+              "bg-gradient-to-r from-gray-700 to-gray-900 text-white" 
+            )}
           >
+            <FaGithub className="w-6 h-6 mr-3" />
             See more on GitHub <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-2" />
-          </a>
+          </motion.a>
         </motion.div>
 
       </div>

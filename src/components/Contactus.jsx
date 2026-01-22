@@ -3,12 +3,15 @@ import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { IoMdPin } from "react-icons/io";
 import { supabase } from '../lib/supabaseClient';
+import { useThemeClasses } from './ThemeAware';
+import { cn } from '../lib/utils';
 
 const Contactus = () => {
   const [subscribe, setSubscribe] = useState(false);
   const [contactInfo, setContactInfo] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const themeClasses = useThemeClasses();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,15 +46,15 @@ const Contactus = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300" id="contact">
+    <div className={cn(themeClasses.secondary, "py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300")} id="contact">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         
         {/* --- Contact Form Section --- */}
         <div className="w-full md:w-2/3 text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 tracking-tight">
+          <h2 className={cn(themeClasses.text, "text-3xl font-bold mb-4 tracking-tight")}>
             Let us get in Touch with you
           </h2>
-          <p className="text-lg mb-8 text-zinc-600 dark:text-zinc-400">
+          <p className={cn(themeClasses.textSecondary, "text-lg mb-8")}>
             Stay updated with our latest services and opportunities.
           </p>
           
@@ -62,7 +65,7 @@ const Contactus = () => {
                 placeholder="Phone Number or Email Address"
                 value={contactInfo}
                 onChange={(e) => setContactInfo(e.target.value)}
-                className="w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-500 border border-zinc-300 dark:border-zinc-700 rounded-l-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-colors"
+                className={cn(themeClasses.input, "w-full placeholder-zinc-500 rounded-l-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-colors")}
                 required
               />
               
@@ -70,11 +73,12 @@ const Contactus = () => {
                 type="submit"
                 data-track="newsletter_signup_submit"
                 disabled={!contactInfo || !subscribe}
-                className={`px-6 py-3 rounded-r-md transition font-semibold whitespace-nowrap ${
+                className={cn(
+                  "px-6 py-3 rounded-r-md transition font-semibold whitespace-nowrap",
                   (!contactInfo || !subscribe) 
                     ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed" 
                     : "bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-900"
-                }`}
+                )}
               >
                 Connect
               </button>
@@ -89,7 +93,7 @@ const Contactus = () => {
                 data-track="newsletter_signup_consent"
                 className="mt-1 h-4 w-4 border-zinc-400 rounded-sm text-zinc-900 focus:ring-zinc-500 accent-zinc-900 dark:accent-white"
               />
-              <span className="text-sm text-zinc-600 dark:text-zinc-400 leading-tight">
+              <span className={cn(themeClasses.textSecondary, "text-sm leading-tight")}>
                 Sign up for our email list for updates. You can unsubscribe at any time.
               </span>
             </label>
@@ -111,27 +115,27 @@ const Contactus = () => {
         {/* --- Location Section (Centered Harare Branch) --- */}
         <div className="flex justify-center w-full">
           
-          <div className="bg-zinc-50 dark:bg-zinc-900 p-8 rounded-xl border border-zinc-200 dark:border-zinc-800 w-full max-w-md text-center md:text-left transition-colors duration-300">
-            <h3 className="text-2xl font-bold mb-6 border-b border-zinc-200 dark:border-zinc-700 pb-4 text-zinc-900 dark:text-white">
+          <div className={cn(themeClasses.card, "p-8 rounded-xl w-full max-w-md text-center md:text-left transition-colors duration-300")}>
+            <h3 className={cn(themeClasses.text, "text-2xl font-bold mb-6 border-b pb-4")}>
               Harare Branch
             </h3>
             
-            <div className="flex items-start mb-5 text-lg text-zinc-700 dark:text-zinc-300">
-              <IoMdPin className="mr-4 mt-1 flex-shrink-0 text-zinc-900 dark:text-white" size={24} />
+            <div className={cn(themeClasses.textSecondary, "flex items-start mb-5 text-lg")}>
+              <IoMdPin className={cn(themeClasses.text, "mr-4 mt-1 flex-shrink-0")} size={24} />
               <p className="leading-relaxed">
                 No. 6791<br />New Ceney Park<br />Harare, Zimbabwe
               </p>
             </div>
 
-            <div className="flex items-center mb-5 text-lg text-zinc-700 dark:text-zinc-300">
-              <FaPhone className="mr-4 flex-shrink-0 text-zinc-900 dark:text-white" size={20} />
+            <div className={cn(themeClasses.textSecondary, "flex items-center mb-5 text-lg")}>
+              <FaPhone className={cn(themeClasses.text, "mr-4 flex-shrink-0")} size={20} />
               <a href="tel:+263788147289" className="hover:underline hover:text-black dark:hover:text-white font-medium transition-colors">
                 +263 788 1472 89
               </a>
             </div>
 
-            <div className="flex items-center text-lg text-zinc-700 dark:text-zinc-300">
-              <MdEmail className="mr-4 flex-shrink-0 text-zinc-900 dark:text-white" size={20} />
+            <div className={cn(themeClasses.textSecondary, "flex items-center text-lg")}>
+              <MdEmail className={cn(themeClasses.text, "mr-4 flex-shrink-0")} size={20} />
               <a href="mailto:redcupseriespvtltd@gmail.com" className="hover:underline hover:text-black dark:hover:text-white break-all transition-colors">
                 redcupseriespvtltd@gmail.com
               </a>

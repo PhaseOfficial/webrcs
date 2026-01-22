@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ContainerScroll } from "./ContainerScroll";
 import { useThemeClasses } from "./ThemeAware";
 import himage from "../assets/heropic.png";
@@ -18,7 +19,7 @@ export default function HeroSection() {
     return [(c >> 16) & 255 / 255, (c >> 8) & 255 / 255, c & 255 / 255];
   };
 
-  const threadsRgb = hexToRgbArray(threadsColor);
+  const threadsRgb = useMemo(() => hexToRgbArray(threadsColor), [threadsColor]);
 
   return (
     <div className={`relative flex flex-col overflow-hidden ${themeClasses.primary}`}>
