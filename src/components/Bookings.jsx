@@ -14,6 +14,12 @@ import {
   FaSort,
   FaSearch
 } from 'react-icons/fa';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function OnlineAssessments() {
   const [assessments, setAssessments] = useState([]);
@@ -139,39 +145,40 @@ export default function OnlineAssessments() {
   return (
     <div className="flex h-full">
       {/* Assessments List */}
-      <div className={`${selectedAssessment ? 'w-1/2' : 'w-full'} border-r border-gray-200`}>
-        {/* Header with Filters and Search */}
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+      <Card className={`${selectedAssessment ? 'w-1/2' : 'w-full'} border-r`}>
+        <CardHeader>
+          <CardTitle>Online Assessments</CardTitle>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
             {/* Status Filter */}
             <div className="flex items-center space-x-2">
               <FaFilter className="text-gray-400" />
-              <select 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All Assessments</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="past">Past</option>
-              </select>
+              <Select onValueChange={setFilter} defaultValue="all">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Assessments</SelectItem>
+                  <SelectItem value="upcoming">Upcoming</SelectItem>
+                  <SelectItem value="past">Past</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Search */}
             <div className="flex-1 relative">
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search by name, email, phone, or city..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-3 py-2"
               />
             </div>
           </div>
 
           {/* Stats */}
-          <div className="flex space-x-4 text-sm">
+          <div className="flex space-x-4 text-sm mt-4">
             <span className="text-gray-600">
               Total: <span className="font-semibold">{assessments.length}</span>
             </span>
@@ -182,10 +189,8 @@ export default function OnlineAssessments() {
               Past: <span className="font-semibold">{assessments.filter(a => !isUpcoming(a.date)).length}</span>
             </span>
           </div>
-        </div>
-
-        {/* Assessments List */}
-        <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+        </CardHeader>
+        <CardContent className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
           {filteredAssessments.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <FaCalendarCheck className="mx-auto text-4xl text-gray-300 mb-4" />
@@ -243,151 +248,170 @@ export default function OnlineAssessments() {
                     <div className="text-xs text-gray-500">
                       Booked: {new Date(assessment.created_at).toLocaleDateString()}
                     </div>
-                    <button
+                    <Button
+                      variant="destructive"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteAssessment(assessment.id);
                       }}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
                     >
-                      Delete
-                    </button>
+                      <FaTrash className="mr-2" /> Delete
+                    </Button>
                   </div>
                 </div>
               );
             })
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Assessment Detail View */}
       {selectedAssessment && (
-        <div className="w-1/2 bg-white">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-start mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Assessment Details</h2>
-              <button
-                onClick={() => setSelectedAssessment(null)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            </div>
+        <Dialog open={!!selectedAssessment} onOpenChange={() => setSelectedAssessment(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Assessment Details</DialogTitle>
+              <DialogDescription>
+                Details of the selected online assessment.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-6">
+            
 
             {/* Action Buttons */}
             <div className="flex space-x-2 mb-6">
-              <a
-                href={`mailto:${selectedAssessment.email}?subject=Assessment Confirmation - ${formatDate(selectedAssessment.date)} at ${selectedAssessment.time}&body=Hi ${selectedAssessment.full_name},%0D%0A%0D%0AThis is a confirmation for your assessment scheduled on ${formatDate(selectedAssessment.date)} at ${selectedAssessment.time}.`}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <FaEnvelope className="text-sm" />
-                <span>Send Confirmation</span>
-              </a>
+              <Button asChild>
+                <a
+                  href={`mailto:${selectedAssessment.email}?subject=Assessment Confirmation - ${formatDate(selectedAssessment.date)} at ${selectedAssessment.time}&body=Hi ${selectedAssessment.full_name},%0D%0A%0D%0AThis is a confirmation for your assessment scheduled on ${formatDate(selectedAssessment.date)} at ${selectedAssessment.time}.`}
+                  className="flex items-center space-x-2"
+                >
+                  <FaEnvelope className="text-sm" />
+                  <span>Send Confirmation</span>
+                </a>
+              </Button>
 
-              <button
+              <Button
+                variant="destructive"
                 onClick={() => deleteAssessment(selectedAssessment.id)}
-                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                <FaTrash className="text-sm" />
+                <FaTrash className="mr-2" />
                 <span>Delete</span>
-              </button>
+              </Button>
             </div>
 
             {/* Assessment Details */}
             <div className="space-y-6">
               {/* Schedule Section */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <FaCalendarCheck className="mr-2 text-blue-600" />
-                  Schedule
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <div className="flex items-center space-x-2">
-                      <FaCalendar className="text-gray-400" />
-                      <span className="text-gray-900 font-medium">
-                        {formatDate(selectedAssessment.date)}
-                      </span>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FaCalendarCheck className="mr-2 text-blue-600" />
+                    Schedule
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Date</p>
+                      <div className="flex items-center space-x-2">
+                        <FaCalendar className="text-gray-400" />
+                        <span className="text-gray-900 font-medium">
+                          {formatDate(selectedAssessment.date)}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Time</p>
+                      <div className="flex items-center space-x-2">
+                        <FaClock className="text-gray-400" />
+                        <span className="text-gray-900 font-medium">{selectedAssessment.time}</span>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
-                    <div className="flex items-center space-x-2">
-                      <FaClock className="text-gray-400" />
-                      <span className="text-gray-900 font-medium">{selectedAssessment.time}</span>
-                    </div>
+                  <div className="mt-3">
+                    <span className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(getStatus(selectedAssessment.date))}`}>
+                      {getStatus(selectedAssessment.date) === 'today' ? 'Scheduled for Today' : getStatus(selectedAssessment.date)}
+                    </span>
                   </div>
-                </div>
-                <div className="mt-3">
-                  <span className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(getStatus(selectedAssessment.date))}`}>
-                    {getStatus(selectedAssessment.date) === 'today' ? 'Scheduled for Today' : getStatus(selectedAssessment.date)}
-                  </span>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Personal Information */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Personal Information</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                      <p className="text-gray-900">{selectedAssessment.full_name}</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personal Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">Full Name</p>
+                        <p className="text-gray-900">{selectedAssessment.full_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">Email</p>
+                        <p className="text-gray-900">{selectedAssessment.email}</p>
+                      </div>
                     </div>
+                    
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                      <p className="text-gray-900">{selectedAssessment.email}</p>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Phone</p>
+                      <p className="text-gray-900">{selectedAssessment.phone}</p>
                     </div>
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <p className="text-gray-900">{selectedAssessment.phone}</p>
-                  </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Address Information */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Address Information</h3>
-                <div className="space-y-2">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1</label>
-                    <p className="text-gray-900">{selectedAssessment.address1}</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Address Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Address Line 1</p>
+                      <p className="text-gray-900">{selectedAssessment.address1}</p>
+                    </div>
+                    
+                    {selectedAssessment.address2 && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">Address Line 2</p>
+                        <p className="text-gray-900">{selectedAssessment.address2}</p>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">City</p>
+                        <p className="text-gray-900">{selectedAssessment.city}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">Postal Code</p>
+                        <p className="text-gray-900">{selectedAssessment.postal}</p>
+                      </div>
+                    </div>
                   </div>
-                  
-                  {selectedAssessment.address2 && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 2</label>
-                      <p className="text-gray-900">{selectedAssessment.address2}</p>
-                    </div>
-                  )}
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                      <p className="text-gray-900">{selectedAssessment.city}</p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
-                      <p className="text-gray-900">{selectedAssessment.postal}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Booking Information */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Booking Information</h3>
-                <div className="text-sm text-gray-600">
-                  <p>Booked on: {new Date(selectedAssessment.created_at).toLocaleString()}</p>
-                  <p className="mt-1">Assessment ID: <code className="bg-gray-100 px-1 rounded">{selectedAssessment.id}</code></p>
-                </div>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Booking Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm text-gray-600">
+                    <p>Booked on: {new Date(selectedAssessment.created_at).toLocaleString()}</p>
+                    <p className="mt-1">Assessment ID: <code className="bg-gray-100 px-1 rounded">{selectedAssessment.id}</code></p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

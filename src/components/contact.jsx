@@ -13,6 +13,12 @@ import {
   FaCheckCircle,
   FaTimesCircle
 } from 'react-icons/fa';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function Contact() {
   const [contacts, setContacts] = useState([]);
@@ -181,40 +187,41 @@ export default function Contact() {
   return (
     <div className="flex h-full">
       {/* Contacts List */}
-      <div className={`${selectedContact ? 'w-1/2' : 'w-full'} border-r border-gray-200`}>
-        {/* Filters and Search */}
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+      <Card className={`${selectedContact ? 'w-1/2' : 'w-full'} border-r`}>
+        <CardHeader>
+          <CardTitle>Contact Management</CardTitle>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
             {/* Status Filter */}
             <div className="flex items-center space-x-2">
               <FaFilter className="text-gray-400" />
-              <select 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All Contacts</option>
-                <option value="new">New</option>
-                <option value="read">Read</option>
-                <option value="subscribed">Subscribed</option>
-              </select>
+              <Select onValueChange={setFilter} defaultValue="all">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Contacts</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="read">Read</SelectItem>
+                  <SelectItem value="subscribed">Subscribed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Search */}
             <div className="flex-1 relative">
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search by contact info or source..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-3 py-2"
               />
             </div>
           </div>
 
           {/* Stats */}
-          <div className="flex space-x-4 text-sm">
+          <div className="flex space-x-4 text-sm mt-4">
             <span className="text-gray-600">
               Total: <span className="font-semibold">{contacts.length}</span>
             </span>
@@ -228,10 +235,8 @@ export default function Contact() {
               Subscribed: <span className="font-semibold">{contacts.filter(c => c.subscribe).length}</span>
             </span>
           </div>
-        </div>
-
-        {/* Contacts List */}
-        <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+        </CardHeader>
+        <CardContent className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
           {filteredContacts.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <FaUser className="mx-auto text-4xl text-gray-300 mb-4" />
@@ -291,177 +296,194 @@ export default function Contact() {
                         </span>
                       )}
                     </div>
-                    <button
+                    <Button
+                      variant="destructive"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteContact(contact.id);
                       }}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
                     >
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
               );
             })
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Contact Detail View */}
       {selectedContact && (
-        <div className="w-1/2 bg-white">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-start mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Contact Details</h2>
-              <button
-                onClick={() => setSelectedContact(null)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            </div>
+        <Dialog open={!!selectedContact} onOpenChange={() => setSelectedContact(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Contact Details</DialogTitle>
+              <DialogDescription>
+                Details of the selected contact.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-6">
+            
 
             {/* Action Buttons */}
             <div className="flex space-x-2 mb-6">
               {selectedContact.status === 'new' ? (
-                <button
+                <Button
                   onClick={() => updateContactStatus(selectedContact.id, 'read')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="flex items-center space-x-2"
                 >
-                  <FaEnvelopeOpen className="text-sm" />
+                  <FaEnvelopeOpen className="text-sm mr-2" />
                   <span>Mark as Read</span>
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={() => updateContactStatus(selectedContact.id, 'new')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex items-center space-x-2"
                 >
-                  <FaEnvelope className="text-sm" />
+                  <FaEnvelope className="text-sm mr-2" />
                   <span>Mark as New</span>
-                </button>
+                </Button>
               )}
 
               {selectedContact.contact_info?.includes('@') && (
-                <a
-                  href={`mailto:${selectedContact.contact_info}`}
-                  className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  <FaReply className="text-sm" />
-                  <span>Contact</span>
-                </a>
+                <Button asChild>
+                  <a
+                    href={`mailto:${selectedContact.contact_info}`}
+                    className="flex items-center space-x-2"
+                  >
+                    <FaReply className="text-sm mr-2" />
+                    <span>Contact</span>
+                  </a>
+                </Button>
               )}
 
-              <button
+              <Button
+                variant="destructive"
                 onClick={() => deleteContact(selectedContact.id)}
-                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                <FaTrash className="text-sm" />
+                <FaTrash className="text-sm mr-2" />
                 <span>Delete</span>
-              </button>
+              </Button>
             </div>
 
             {/* Contact Details */}
             <div className="space-y-6">
               {/* Contact Information */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <FaUser className="mr-2 text-blue-600" />
-                  Contact Information
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact Method</label>
-                    <div className="flex items-center space-x-2">
-                      {getContactIcon(parseContactInfo(selectedContact.contact_info).type)}
-                      <span className="text-gray-900 font-medium capitalize">
-                        {parseContactInfo(selectedContact.contact_info).type}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FaUser className="mr-2 text-blue-600" />
+                    Contact Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Contact Method</p>
+                      <div className="flex items-center space-x-2">
+                        {getContactIcon(parseContactInfo(selectedContact.contact_info).type)}
+                        <span className="text-gray-900 font-medium capitalize">
+                          {parseContactInfo(selectedContact.contact_info).type}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Contact Info</p>
+                      <p className="text-gray-900 font-mono bg-white p-2 rounded border">
+                        {selectedContact.contact_info}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Metadata */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FaGlobe className="mr-2 text-green-600" />
+                    Metadata
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Status</p>
+                      <span className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(selectedContact.status)}`}>
+                        {selectedContact.status}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">Source</p>
+                      <span className={`px-3 py-1 text-sm rounded-full ${getSourceColor(selectedContact.source)}`}>
+                        {selectedContact.source}
                       </span>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact Info</label>
-                    <p className="text-gray-900 font-mono bg-white p-2 rounded border">
-                      {selectedContact.contact_info}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Metadata */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                  <FaGlobe className="mr-2 text-green-600" />
-                  Metadata
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <span className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(selectedContact.status)}`}>
-                      {selectedContact.status}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
-                    <span className={`px-3 py-1 text-sm rounded-full ${getSourceColor(selectedContact.source)}`}>
-                      {selectedContact.source}
-                    </span>
-                  </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Subscription Status */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Subscription</h3>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-700">Newsletter Subscription</p>
-                    <p className="text-xs text-gray-500">User opted in for marketing communications</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Subscription</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">Newsletter Subscription</p>
+                      <p className="text-xs text-gray-500">User opted in for marketing communications</p>
+                    </div>
+                    <Button
+                      onClick={() => toggleSubscription(selectedContact.id, selectedContact.subscribe)}
+                      className={`flex items-center space-x-2`}
+                      variant={selectedContact.subscribe ? 'destructive' : 'default'}
+                      size="sm"
+                    >
+                      {selectedContact.subscribe ? (
+                        <>
+                          <FaTimesCircle />
+                          <span>Unsubscribe</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaCheckCircle />
+                          <span>Subscribe</span>
+                        </>
+                      )}
+                    </Button>
                   </div>
-                  <button
-                    onClick={() => toggleSubscription(selectedContact.id, selectedContact.subscribe)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                      selectedContact.subscribe
-                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                        : 'bg-green-100 text-green-700 hover:bg-green-200'
-                    }`}
-                  >
-                    {selectedContact.subscribe ? (
-                      <>
-                        <FaTimesCircle />
-                        <span>Unsubscribe</span>
-                      </>
-                    ) : (
-                      <>
-                        <FaCheckCircle />
-                        <span>Subscribe</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Timeline */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Timeline</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Created</span>
-                    <span className="text-gray-900">
-                      {new Date(selectedContact.created_at).toLocaleString()}
-                    </span>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Timeline</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Created</span>
+                      <span className="text-gray-900">
+                        {new Date(selectedContact.created_at).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Contact ID</span>
+                      <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                        {selectedContact.id.substring(0, 8)}...
+                      </code>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Contact ID</span>
-                    <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-                      {selectedContact.id.substring(0, 8)}...
-                    </code>
-                  </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

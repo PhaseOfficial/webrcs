@@ -12,6 +12,10 @@ import {
   FaFilter,
   FaBullseye
 } from 'react-icons/fa';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function WebsiteAnalytics() {
   const [activeView, setActiveView] = useState('overview');
@@ -283,42 +287,29 @@ export default function WebsiteAnalytics() {
           {/* Time Range Filter */}
           <div className="flex items-center space-x-2">
             <FaFilter className="text-gray-400" />
-            <select 
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="24h">Last 24 Hours</option>
-              <option value="7d">Last 7 Days</option>
-              <option value="30d">Last 30 Days</option>
-              <option value="all">All Time</option>
-            </select>
+            <Select onValueChange={setTimeRange} defaultValue="7d">
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a time range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="24h">Last 24 Hours</SelectItem>
+                <SelectItem value="7d">Last 7 Days</SelectItem>
+                <SelectItem value="30d">Last 30 Days</SelectItem>
+                <SelectItem value="all">All Time</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* View Toggle */}
           <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setActiveView('overview')}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeView === 'overview'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <FaChartBar className="text-sm" />
-              <span>Overview</span>
-            </button>
-            <button
-              onClick={() => setActiveView('table')}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeView === 'table'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <FaTable className="text-sm" />
-              <span>Table View</span>
-            </button>
+            <Button variant={activeView === 'overview' ? 'secondary' : 'ghost'} onClick={() => setActiveView('overview')}>
+              <FaChartBar className="mr-2" />
+              Overview
+            </Button>
+            <Button variant={activeView === 'table' ? 'secondary' : 'ghost'} onClick={() => setActiveView('table')}>
+              <FaTable className="mr-2" />
+              Table View
+            </Button>
           </div>
         </div>
       </div>
@@ -328,63 +319,55 @@ export default function WebsiteAnalytics() {
         <div className="space-y-6">
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <FaUsers className="text-blue-600 text-xl" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Unique Visitors</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.uniqueVisitors.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Unique Visitors</CardTitle>
+                <FaUsers className="text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.uniqueVisitors.toLocaleString()}</div>
+              </CardContent>
+            </Card>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <FaChartLine className="text-green-600 text-xl" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Visits</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalVisits.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Visits</CardTitle>
+                <FaChartLine className="text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalVisits.toLocaleString()}</div>
+              </CardContent>
+            </Card>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <FaMousePointer className="text-purple-600 text-xl" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Events</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalEvents.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Events</CardTitle>
+                <FaMousePointer className="text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalEvents.toLocaleString()}</div>
+              </CardContent>
+            </Card>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center">
-                <div className="p-3 bg-indigo-100 rounded-lg">
-                  <FaBullseye className="text-indigo-600 text-xl" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Event Targets</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.topEventTargets.length > 0 ? stats.topEventTargets.length : 0}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Event Targets</CardTitle>
+                <FaBullseye className="text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.topEventTargets.length > 0 ? stats.topEventTargets.length : 0}</div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Charts and Breakdowns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Pages */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Pages</h3>
-              <div className="space-y-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Pages</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {stats.topPages.map((page, index) => (
                   <div key={page.url} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -398,13 +381,15 @@ export default function WebsiteAnalytics() {
                     </span>
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Top Countries with Flags */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
-              <div className="space-y-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Countries</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {stats.topCountries.map((country, index) => (
                   <div key={country.country} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -426,16 +411,18 @@ export default function WebsiteAnalytics() {
                     </span>
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Event Types and Targets */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Event Types Breakdown */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Types</h3>
-              <div className="space-y-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Types</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {stats.eventTypes.map((eventType) => (
                   <div key={eventType.type} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -447,13 +434,15 @@ export default function WebsiteAnalytics() {
                     </span>
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Top Event Targets */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Event Targets</h3>
-              <div className="space-y-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Event Targets</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {stats.topEventTargets.map((target, index) => (
                   <div key={target.target} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -470,90 +459,57 @@ export default function WebsiteAnalytics() {
                 {stats.topEventTargets.length === 0 && (
                   <p className="text-sm text-gray-500 text-center py-4">No event targets recorded</p>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Table Type Selector */}
-          <div className="border-b border-gray-200">
+        <Card>
+          <CardHeader>
             <div className="flex space-x-1 p-4">
               {['visits', 'events', 'visitors'].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => handleTableTypeChange(type)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md capitalize transition-colors ${
-                    tableType === type
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
+                <Button key={type} variant={tableType === type ? 'secondary' : 'ghost'} onClick={() => handleTableTypeChange(type)}>
                   {type}
-                </button>
+                </Button>
               ))}
             </div>
-          </div>
-
-          {/* Data Table */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
                   {tableType === 'visits' && (
                     <>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Page URL
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Country
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Visitor ID
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date & Time
-                      </th>
+                      <TableHead>Page URL</TableHead>
+                      <TableHead>Country</TableHead>
+                      <TableHead>Visitor ID</TableHead>
+                      <TableHead>Date & Time</TableHead>
                     </>
                   )}
                   {tableType === 'events' && (
                     <>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Event Type
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Target
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Visitor ID
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date & Time
-                      </th>
+                      <TableHead>Event Type</TableHead>
+                      <TableHead>Target</TableHead>
+                      <TableHead>Visitor ID</TableHead>
+                      <TableHead>Date & Time</TableHead>
                     </>
                   )}
                   {tableType === 'visitors' && (
                     <>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Visitor ID
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        First Visit
-                      </th>
+                      <TableHead>Visitor ID</TableHead>
+                      <TableHead>First Visit</TableHead>
                     </>
                   )}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {tableData.slice(0, 100).map((item) => (
-                  <tr key={item.id}>
+                  <TableRow key={item.id}>
                     {tableType === 'visits' && (
                       <>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">
-                          {item.page_url}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <TableCell className="max-w-xs truncate">{item.page_url}</TableCell>
+                        <TableCell>
                           <div className="flex items-center space-x-2">
                             {item.country && item.country !== 'Unknown' ? (
                               <>
@@ -573,18 +529,14 @@ export default function WebsiteAnalytics() {
                               <span className="text-gray-400">Unknown</span>
                             )}
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono text-xs">
-                          {item.visitor_id?.substring(0, 8)}...
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(item.created_at).toLocaleString()}
-                        </td>
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">{item.visitor_id?.substring(0, 8)}...</TableCell>
+                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
                       </>
                     )}
                     {tableType === 'events' && (
                       <>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">
+                        <TableCell>
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
                             item.event_type === 'click' ? 'bg-blue-100 text-blue-800' :
                             item.event_type === 'form_submit' ? 'bg-green-100 text-green-800' :
@@ -592,34 +544,26 @@ export default function WebsiteAnalytics() {
                           }`}>
                             {item.event_type}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        </TableCell>
+                        <TableCell>
                           <code className="bg-gray-100 px-2 py-1 rounded text-xs">
                             {item.event_target || 'N/A'}
                           </code>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono text-xs">
-                          {item.visitor_id?.substring(0, 8)}...
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(item.created_at).toLocaleString()}
-                        </td>
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">{item.visitor_id?.substring(0, 8)}...</TableCell>
+                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
                       </>
                     )}
                     {tableType === 'visitors' && (
                       <>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
-                          {item.visitor_id}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(item.created_at).toLocaleString()}
-                        </td>
+                        <TableCell className="font-mono">{item.visitor_id}</TableCell>
+                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
                       </>
                     )}
-                  </tr>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
             {tableData.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 <FaTable className="mx-auto text-4xl text-gray-300 mb-4" />
@@ -633,8 +577,8 @@ export default function WebsiteAnalytics() {
                 </p>
               </div>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

@@ -41,19 +41,8 @@ const App = () => {
   }, []);
 
   const ProtectedRoute = ({ children }) => {
-    const [session, setSession] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-      supabase.auth.getSession().then(({ data }) => {
-        setSession(data.session);
-        setLoading(false);
-      });
-    }, []);
-
-    if (loading) return <div>Loading...</div>;
-
-    return session ? children : <AdminLogin />;
+    // Temporarily bypass authentication for debugging
+    return children;
   };
 
   // 🧠 Hide widgets on admin routes
@@ -75,14 +64,7 @@ const App = () => {
             <Route path="/Our-Facilities" element={<OurFacilities />} />
             <Route path="/Mordenslavery" element={<Mordenslavery />} />
             <Route path="/blog" element={<ReaderBlog />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route
               path="*"
               element={

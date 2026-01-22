@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { FaEnvelope, FaEnvelopeOpen, FaPhone, FaMapMarkerAlt, FaUser, FaReply, FaTrash, FaFilter } from 'react-icons/fa';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function ContactMessages() {
   const [messages, setMessages] = useState([]);
@@ -121,38 +127,39 @@ export default function ContactMessages() {
   return (
     <div className="flex h-full">
       {/* Messages List */}
-      <div className={`${selectedMessage ? 'w-1/2' : 'w-full'} border-r border-gray-200`}>
-        {/* Filters and Search */}
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+      <Card className={`${selectedMessage ? 'w-1/2' : 'w-full'} border-r`}>
+        <CardHeader>
+          <CardTitle>Contact Messages</CardTitle>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
             {/* Status Filter */}
             <div className="flex items-center space-x-2">
               <FaFilter className="text-gray-400" />
-              <select 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All Messages</option>
-                <option value="new">New</option>
-                <option value="read">Read</option>
-              </select>
+              <Select onValueChange={setFilter} defaultValue="all">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Messages</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="read">Read</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Search */}
             <div className="flex-1">
-              <input
+              <Input
                 type="text"
                 placeholder="Search by name, email, or message..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full"
               />
             </div>
           </div>
 
           {/* Stats */}
-          <div className="flex space-x-4 text-sm">
+          <div className="flex space-x-4 text-sm mt-4">
             <span className="text-gray-600">
               Total: <span className="font-semibold">{messages.length}</span>
             </span>
@@ -163,10 +170,8 @@ export default function ContactMessages() {
               Read: <span className="font-semibold">{messages.filter(m => m.status === 'read').length}</span>
             </span>
           </div>
-        </div>
-
-        {/* Messages List */}
-        <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+        </CardHeader>
+        <CardContent className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
           {filteredMessages.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <FaEnvelope className="mx-auto text-4xl text-gray-300 mb-4" />
@@ -233,96 +238,97 @@ export default function ContactMessages() {
               </div>
             ))
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Message Detail View */}
       {selectedMessage && (
-        <div className="w-1/2 bg-white">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Message Details</h2>
-              <button
-                onClick={() => setSelectedMessage(null)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            </div>
+        <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Message Details</DialogTitle>
+              <DialogDescription>
+                Details of the selected contact message.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-6">
+            
 
             {/* Action Buttons */}
             <div className="flex space-x-2 mb-6">
               {selectedMessage.status === 'new' ? (
-                <button
+                <Button
                   onClick={() => updateMessageStatus(selectedMessage.id, 'read')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="flex items-center space-x-2"
                 >
-                  <FaEnvelopeOpen className="text-sm" />
+                  <FaEnvelopeOpen className="text-sm mr-2" />
                   <span>Mark as Read</span>
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={() => updateMessageStatus(selectedMessage.id, 'new')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex items-center space-x-2"
                 >
-                  <FaEnvelope className="text-sm" />
+                  <FaEnvelope className="text-sm mr-2" />
                   <span>Mark as New</span>
-                </button>
+                </Button>
               )}
 
-              <a
-                href={`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject || 'Your message'}&body=Hi ${selectedMessage.name},%0D%0A%0D%0A`}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                <FaReply className="text-sm" />
-                <span>Reply</span>
-              </a>
+              <Button asChild>
+                <a
+                  href={`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject || 'Your message'}&body=Hi ${selectedMessage.name},%0D%0A%0D%0A`}
+                  className="flex items-center space-x-2"
+                >
+                  <FaReply className="text-sm mr-2" />
+                  <span>Reply</span>
+                </a>
+              </Button>
 
-              <button
+              <Button
+                variant="destructive"
                 onClick={() => deleteMessage(selectedMessage.id)}
-                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                <FaTrash className="text-sm" />
+                <FaTrash className="text-sm mr-2" />
                 <span>Delete</span>
-              </button>
+              </Button>
             </div>
 
             {/* Message Details */}
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Name</p>
                   <p className="text-gray-900">{selectedMessage.name}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Email</p>
                   <p className="text-gray-900">{selectedMessage.email}</p>
                 </div>
               </div>
 
               {selectedMessage.phone && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Phone</p>
                   <p className="text-gray-900">{selectedMessage.phone}</p>
                 </div>
               )}
 
               {selectedMessage.postcode && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Postcode</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Postcode</p>
                   <p className="text-gray-900">{selectedMessage.postcode}</p>
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Status</p>
                   <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(selectedMessage.status)}`}>
                     {selectedMessage.status}
                   </span>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Source</p>
                   <span className={`px-2 py-1 text-xs rounded-full ${getSourceColor(selectedMessage.source)}`}>
                     {selectedMessage.source}
                   </span>
@@ -331,7 +337,7 @@ export default function ContactMessages() {
 
               {selectedMessage.subscribe && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Newsletter</label>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Newsletter</p>
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">
                     Subscribed
                   </span>
@@ -339,21 +345,22 @@ export default function ContactMessages() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <p className="text-sm font-medium text-gray-700 mb-1">Message</p>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-gray-900 whitespace-pre-wrap">{selectedMessage.message}</p>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Received</label>
+                <p className="text-sm font-medium text-gray-700 mb-1">Received</p>
                 <p className="text-gray-600">
                   {new Date(selectedMessage.created_at).toLocaleString()}
                 </p>
               </div>
             </div>
-          </div>
-        </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );
