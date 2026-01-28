@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import Navbar from '../components/Navbar';
 import Footer from '../components/footer';
-import logo from '../assets/qt=q_95.webp';
+import logo from '/weblogo.png';
 
 const ReaderBlog = () => {
   const [blogPosts, setBlogPosts] = useState([]);

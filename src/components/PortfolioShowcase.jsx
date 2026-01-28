@@ -1,22 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
 import { 
   ExternalLink, 
-  Github, 
   Code2, 
-  ShoppingCart, 
   Building2, 
   ArrowRight,
   Layout,
   Globe,
   CreditCard,
   Cloud,
-  GraduationCap,
-  Banknote // Added for Clicknpay differentiation
+  Banknote,
+  Loader2 
 } from 'lucide-react';
 import { useThemeClasses } from './ThemeAware';
 import { cn } from '../lib/utils'; 
+import { supabase } from '../lib/supabaseClient'; // Ensure path is correct
 
 // === 1. HELPER COMPONENT FOR LOGOS ===
 const TechLogo = ({ name, className }) => {
@@ -42,12 +41,14 @@ const TechLogo = ({ name, className }) => {
     'Django': 'django',
     'OpenAI': 'openai',
     'Vercel': 'vercel',
-    'Framer Motion': 'framer'
+    'Framer Motion': 'framer',
+    'MySQL': 'mysql',
+    'PyTorch': 'pytorch'
   };
 
   // === CUSTOM ICONS FOR LOCAL TECH ===
   if (name === 'Paynow') return <CreditCard className={cn("w-4 h-4 text-blue-500", className)} />;
-  if (name === 'Clicknpay') return <Banknote className={cn("w-4 h-4 text-emerald-500", className)} />; // Added Clicknpay
+  if (name === 'Clicknpay') return <Banknote className={cn("w-4 h-4 text-emerald-500", className)} />;
   if (name === 'Chatbot') return <Cloud className={cn("w-4 h-4 text-sky-500", className)} />;
   if (name === 'AI Models') return <Code2 className={cn("w-4 h-4 text-purple-500", className)} />;
 
@@ -63,123 +64,6 @@ const TechLogo = ({ name, className }) => {
     />
   );
 };
-
-// === 2. PROJECT DATA ===
-const portfolioItems = [
-  {
-    id: 1,
-    category: 'professional', 
-    title: 'Phase Portfolio',
-    subtitle: 'Panashe Arthur Mhonde',
-    description: 'The official creative portfolio for Panashe Arthur Mhonde. A visually immersive showcase featuring high-performance image optimization and seamless gallery interactions.',
-    techStack: ['React', 'Framer Motion', 'Tailwind', 'Vercel'],
-    link: 'https://phase.redcupseries.co.zw/',
-    results: {
-      media: 'Optimized',
-      ux: 'Immersive',
-    },
-    color: 'orange' 
-  },
-  {
-    id: 2,
-    category: 'ai', 
-    title: 'Taurai AI',
-    subtitle: 'Free AI Chat Platform',
-    description: 'A free, accessible conversational AI platform designed to democratize access to advanced language models for local users.',
-    techStack: ['Next.js', 'OpenAI', 'Tailwind', 'Vercel'],
-    link: 'https://taurai.redcupseries.co.zw',
-    results: {
-      access: 'Free',
-      response: 'Real-time',
-    },
-    color: 'purple'
-  },
-  {
-    id: 3,
-    category: 'professional', 
-    title: 'Village Business',
-    subtitle: 'Multi-Vendor E-commerce',
-    description: 'A comprehensive e-commerce platform empowering local businesses to sell online. Features vendor management, secure payments via Clicknpay API, and logistics tracking.',
-    // === UPDATED TECH STACK ===
-    techStack: ['WordPress', 'WooCommerce', 'Clicknpay', 'MySQL'], 
-    link: 'https://www.villagebusiness.co.zw/', 
-    results: {
-      vendors: '50+',
-      uptime: '99.9%',
-    },
-    color: 'orange'
-  },
-  {
-    id: 4,
-    category: 'professional', 
-    title: 'Vybrant Care Services',
-    subtitle: 'Healthcare Platform & Chatbot',
-    description: 'Modern landing page with an integrated blog and an AI-powered customer service chatbot to assist visitors with care service queries.',
-    techStack: ['React', 'Node.js', 'OpenAI', 'Tailwind'],
-    link: 'https://vybrantcareservices.com/',
-    results: {
-      engagement: '+45%',
-      inquiries: 'Automated',
-    },
-    color: 'blue'
-  },
-  {
-    id: 5,
-    category: 'enterprise', 
-    title: 'TechHarvest ERP',
-    subtitle: 'Enterprise Resource Planning',
-    description: 'Custom ERP solution designed for agricultural management, streamlining inventory, payroll, and harvest tracking for large-scale operations.',
-    techStack: ['Python', 'Django', 'PostgreSQL', 'Docker'],
-    link: '#', 
-    results: {
-      efficiency: '+60%',
-      records: '1M+',
-    },
-    color: 'green'
-  },
-  {
-    id: 6,
-    category: 'ai', 
-    title: 'Edu-Tech AI Platform',
-    subtitle: 'Private School Learning System',
-    description: 'An AI-powered educational platform for private schools, offering personalized learning paths and automated grading assistance.',
-    techStack: ['Next.js', 'OpenAI', 'Firebase', 'Chart.js'],
-    link: '#', 
-    results: {
-      students: 'Active',
-      grading: 'Automated',
-    },
-    color: 'purple'
-  },
-  {
-    id: 7,
-    category: 'professional', 
-    title: 'Red Cup Series',
-    subtitle: 'Event Landing Page',
-    description: 'High-performance landing page for the Red Cup Series main event, featuring event schedules, speaker profiles, and ticket registration integration.',
-    techStack: ['React', 'Framer Motion', 'Tailwind'],
-    link: 'https://www.redcupseries.co.zw',
-    results: {
-      loadTime: '0.8s',
-      seo: '100/100',
-    },
-    color: 'blue'
-  },
-  {
-    id: 8,
-    category: 'ai', 
-    title: 'Fine-Tuned Internal AI',
-    subtitle: 'LLM Customization',
-    description: 'Development and fine-tuning of specialized AI models for internal company use to automate reporting and data analysis.',
-    techStack: ['Python', 'OpenAI', 'PyTorch'],
-    link: '#',
-    results: {
-      accuracy: '98%',
-      tasks: 'Automated',
-    },
-    color: 'purple'
-  }
-];
 
 const categories = [
   { id: 'all', name: 'All Work', icon: <Layout className="w-4 h-4" /> },
@@ -234,11 +118,49 @@ const containerVariants = {
 
 export default function PortfolioShowcase() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [portfolioItems, setPortfolioItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const themeClasses = useThemeClasses();
+
+  // === FETCH DATA FROM SUPABASE ===
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_items')
+          .select('*')
+          .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+
+        // Transform snake_case DB fields to camelCase for component
+        const formattedData = data.map(item => ({
+            ...item,
+            techStack: item.tech_stack // Map tech_stack (DB) to techStack (Component)
+        }));
+
+        setPortfolioItems(formattedData || []);
+      } catch (error) {
+        console.error('Error fetching portfolio:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolio();
+  }, []);
 
   const filteredItems = activeCategory === 'all' 
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === activeCategory);
+
+  if (loading) {
+    return (
+      <section className={cn("py-40 px-4 flex justify-center items-center", themeClasses.secondary)}>
+        <Loader2 className="w-10 h-10 animate-spin text-gray-400" />
+      </section>
+    );
+  }
 
   return (
     <section className={cn("py-24 px-4 md:px-8 transition-colors duration-300", themeClasses.secondary)}>
@@ -341,7 +263,7 @@ export default function PortfolioShowcase() {
 
                     {/* Stats Row */}
                     <div className="flex gap-6 mb-8 pt-6 border-t border-gray-100/50 dark:border-zinc-800/50">
-                      {Object.entries(item.results).map(([key, value]) => (
+                      {item.results && Object.entries(item.results).map(([key, value]) => (
                         <div key={key}>
                           <div className={cn("text-xl font-extrabold tabular-nums", style.text)}>{value}</div>
                           <div className={cn("text-[10px] uppercase font-bold opacity-60 tracking-wider", themeClasses.text)}>{key}</div>
@@ -354,7 +276,7 @@ export default function PortfolioShowcase() {
                   <div>
                     {/* Tech Stack Pills */}
                     <div className="flex flex-wrap gap-2 mb-8">
-                      {item.techStack.map((tech, i) => (
+                      {item.techStack && item.techStack.map((tech, i) => (
                         <motion.span 
                           key={tech} 
                           initial={{ opacity: 0, y: 10 }}

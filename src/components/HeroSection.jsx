@@ -1,16 +1,33 @@
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ContainerScroll } from "./ContainerScroll";
 import { useThemeClasses } from "./ThemeAware";
-import himage from "../assets/heropic.png";
+import { motion, AnimatePresence } from "framer-motion";
 import Threads from './Threads';
+
+// Import all hero images
+import himage from "../assets/heropic.png";
+import himage1 from "../assets/heropic1.png"; // Ensure this file exists
+import himage2 from "../assets/heropic2.png"; // Ensure this file exists
+
+const images = [himage, himage1, himage2];
 
 export default function HeroSection() {
   const themeClasses = useThemeClasses();
   const { threadsColor, linesBackgroundColor } = themeClasses;
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // --- Image Switcher Logic ---
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Switches every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Convert hex color to RGB array for OGL's Color constructor
   const hexToRgbArray = (hex) => {
-    if (!hex) return [0, 0, 0]; // Default to black if no color is provided
+    if (!hex) return [0, 0, 0];
     let c = hex.substring(1).split('');
     if (c.length === 3) {
       c = [c[0], c[0], c[1], c[1], c[2], c[2]];
@@ -27,7 +44,7 @@ export default function HeroSection() {
         className="absolute inset-0 z-0" 
         style={{ backgroundColor: linesBackgroundColor, transform: 'translateY(-20%)' }}
       >
-        <Threads color={threadsRgb} />
+        {/* <Threads color={threadsRgb} /> */}
       </div>
       <div className="relative z-10">
         <ContainerScroll
@@ -41,7 +58,6 @@ export default function HeroSection() {
               </h1>
               <p className={`text-xl md:text-2xl ${themeClasses.textSecondary} mt-6 max-w-4xl mx-auto leading-relaxed`}>
                 From startup MVPs to enterprise solutions and stunning e-commerce platforms
-               
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-8">
                 <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -57,12 +73,24 @@ export default function HeroSection() {
             </>
           }
         >
-          <img
-            src={himage}
-            alt="Modern web development and digital solutions"
-            className="mx-auto rounded-2xl object-cover h-full w-full object-left-top"
-            draggable={false}
-          />
+          {/* Animated Image Container */}
+          <div className="relative h-full w-full bg-gray-100 dark:bg-zinc-900 rounded-2xl overflow-hidden">
+            <AnimatePresence mode="popLayout">
+              <motion.img
+                key={currentImage} // Key change triggers animation
+                src={images[currentImage]}
+                alt="Modern web development and digital solutions"
+                className="rounded-2xl object-cover h-full w-full object-left-top absolute inset-0"
+                draggable={false}
+                
+                // Animation Props
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }} // Smooth 1 second fade
+              />
+            </AnimatePresence>
+          </div>
         </ContainerScroll>
       </div>
     </div>

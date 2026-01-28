@@ -23,13 +23,13 @@ const Footer = () => {
             <IoLogoWhatsapp className="w-6 h-6"/>
 
             </a>
-            <a href="https://www.instagram.com/vybrantcareservices/#" className="hover:text-white">
+            <a href="https://www.instagram.com/redcupseries_web/#" className="hover:text-white">
             <AiFillInstagram className="w-6 h-6"/>
             </a>
-            <a href="https://www.facebook.com/vybrantcareservices" className="hover:text-white">
+            <a href="https://www.facebook.com/redcupseries_web" className="hover:text-white">
             <FaFacebook className="w-6 h-6"/>
             </a>
-            <a href="https://www.linkedin.com/in/vybrantcareservices" className="hover:text-white">
+            <a href="https://www.linkedin.com/in/redcupseries" className="hover:text-white">
             <FaLinkedin className="w-6 h-6"/>
             </a>
           </div>
