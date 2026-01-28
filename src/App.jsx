@@ -24,6 +24,11 @@ import ReaderBlog from "./pages/ReaderBlog";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ThemeIndicator from "./components/ThemeIndicator";
 import { ThemeWrapper } from "./components/ThemeAware";
+import ClientArea from "./pages/ClientArea";
+import Domains from "./pages/Domains";
+import Billing from "./pages/Billing";
+import Support from "./pages/Support";
+import OpenTicket from "./pages/OpenTicket";
 
 const tagManagerArgs = {
   gtmId: "GTM-PKXK7LPV",
@@ -65,6 +70,11 @@ const App = () => {
             <Route path="/Mordenslavery" element={<Mordenslavery />} />
             <Route path="/blog" element={<ReaderBlog />} />
             <Route path="/admin" element={<AdminDashboard />} />
+<Route path="/client-area" element={<ClientArea />} />
+            <Route path="/domains" element={<Domains />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/open-ticket" element={<OpenTicket />} />
             <Route
               path="*"
               element={
