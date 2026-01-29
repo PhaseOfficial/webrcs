@@ -3,7 +3,7 @@ import { generateTrendingTitles } from '../services/geminiService';
 import Spinner from './Spinner';
 
 const TitleSuggester = ({ onSelectTitle }) => {
-  const [topic, setTopic] = useState('Trends in care work in the UK');
+  const [topic, setTopic] = useState('Trends in web development globaly');
   const [titles, setTitles] = useState([]);
   const [sources, setSources] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

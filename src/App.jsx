@@ -24,6 +24,7 @@ import Support from "./pages/Support";
 import OpenTicket from "./pages/OpenTicket";
 import Login from "./pages/Login"; // ✅ New Import
 import Signup from "./pages/Signup";
+import MyServices from "./pages/MyServices";
 
 // Components & Utils
 import RedCupChatBot from "./components/AIChatWidget";
@@ -76,9 +77,6 @@ const App = () => {
               <Route path="/Comingsoon" element={<ComingSoon />} />
               <Route path="/Contact" element={<ContactUs />} />
               <Route path="/Careers" element={<Careers />} />
-              <Route path="/Supportedliving" element={<Supportedliving />} />
-              <Route path="/Our-Facilities" element={<OurFacilities />} />
-              <Route path="/Mordenslavery" element={<Mordenslavery />} />
               <Route path="/blog" element={<ReaderBlog />} />
               
               
@@ -93,6 +91,7 @@ const App = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/open-ticket" element={<OpenTicket />} />
               <Route path="/client-area/profile" element={<ProfileUpdate />} />
+              <Route path="/client-area/services" element={<MyServices />} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />

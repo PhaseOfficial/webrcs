@@ -44,7 +44,7 @@ export default function HeroSection() {
         className="absolute inset-0 z-0" 
         style={{ backgroundColor: linesBackgroundColor, transform: 'translateY(-20%)' }}
       >
-        {/* <Threads color={threadsRgb} /> */}
+        <Threads color={threadsRgb} />
       </div>
       <div className="relative z-10">
         <ContainerScroll

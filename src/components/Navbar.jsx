@@ -20,7 +20,7 @@ const baseNavLinks = [
   { to: '/About', text: 'About Us', type: 'route' },
   // { to: 'services', text: 'Services', type: 'scroll' },
   { to: '/Careers', text: 'Careers', type: 'route' },
-  { to: 'contact', text: 'Contact Us', type: 'scroll' },
+  { to: '/Contact', text: 'Contact Us', type: 'route' },
   { to: '/blog', text: 'Blog', type: 'route' },
 ];
 

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
-// Theme configurations
+// Theme configurations (Kept exactly as provided)
 const themes = {
   light: {
     name: 'Light Theme',
@@ -72,39 +72,74 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState('dark');
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // 1. Initialize state from LocalStorage if available
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('user-theme') || 'dark';
+    }
+    return 'dark';
+  });
 
+  // 2. Track if the user has manually selected a theme
+  const [hasUserSelected, setHasUserSelected] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('user-theme');
+    }
+    return false;
+  });
+
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const themeNames = Object.keys(themes);
+
+  // Effect to apply theme classes to body
   useEffect(() => {
     const body = document.body;
+    const root = document.documentElement; // Needed for Tailwind 'dark' class
     const theme = themes[currentTheme];
-    const themeClasses = Object.values(themes).map(t => t.colors.text);
-    body.classList.remove(...themeClasses);
+    
+    // Remove old text color classes
+    const allTextClasses = Object.values(themes).map(t => t.colors.text);
+    body.classList.remove(...allTextClasses);
     body.classList.add(theme.colors.text);
+
+    // Toggle 'dark' class on HTML tag for Tailwind dark mode to work properly
+    if (currentTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+
   }, [currentTheme]);
 
-  const themeNames = Object.keys(themes);
-  let currentIndex = themeNames.indexOf(currentTheme);
-
-  // Auto-switch themes every 2 minutes
+  // 3. Auto-switch logic (Only runs if !hasUserSelected)
   useEffect(() => {
+    if (hasUserSelected) return; // STOP here if user made a choice
+
     const interval = setInterval(() => {
       setIsTransitioning(true);
       
       setTimeout(() => {
-        currentIndex = (currentIndex + 1) % themeNames.length;
-        const nextTheme = themeNames[currentIndex];
-        setCurrentTheme(nextTheme);
+        setCurrentTheme((prevTheme) => {
+          const currentIndex = themeNames.indexOf(prevTheme);
+          const nextIndex = (currentIndex + 1) % themeNames.length;
+          return themeNames[nextIndex];
+        });
         setIsTransitioning(false);
-      }, 700); // Slower transition for a smoother effect
-    }, 300000); // 5 minutes = 300,000ms
+      }, 700); 
+    }, 120000); // 2 minutes (120,000ms)
 
     return () => clearInterval(interval);
-  }, [currentTheme]);
+  }, [hasUserSelected, themeNames]); // Dependency on hasUserSelected is key
 
+  // 4. Manual Switch Function
   const switchTheme = (themeName) => {
     if (themes[themeName]) {
       setIsTransitioning(true);
+      
+      // Save preference and stop auto-switcher
+      setHasUserSelected(true);
+      localStorage.setItem('user-theme', themeName);
+
       setTimeout(() => {
         setCurrentTheme(themeName);
         setIsTransitioning(false);
@@ -127,7 +162,7 @@ export const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={value}>
-      <div className={`transition-all duration-700 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-700 ease-in-out ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         {children}
       </div>
     </ThemeContext.Provider>
