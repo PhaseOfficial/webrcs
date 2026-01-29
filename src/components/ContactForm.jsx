@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { FaWhatsapp } from "react-icons/fa";
+import { useThemeClasses } from "./ThemeAware";
 
 const ContactForm = () => {
+  const themeClasses = useThemeClasses();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -71,7 +73,7 @@ const ContactForm = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = "+447828402043"; // Replace with your WhatsApp number (no "+" sign)
+    const phoneNumber = "+263788147289"; // Replace with your WhatsApp number (no "+" sign)
     const text = encodeURIComponent("Hello! I'd like to ask about your services.");
     // Track WhatsApp click before opening
     if (window.trackEvent) {
@@ -81,11 +83,11 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white shadow-lg rounded-2xl p-8 mt-10">
-      <h2 className="text-2xl font-bold text-center mb-4 text-pink-600">
+    <div className={`w-full max-w-lg mx-auto ${themeClasses.background} shadow-lg rounded-2xl p-8 mt-10`}>
+      <h2 className={`text-2xl font-bold text-center mb-4 ${themeClasses.text}`}>
         Contact Us
       </h2>
-      <p className="text-gray-600 text-center mb-6">
+      <p className={`${themeClasses.textSecondary} text-center mb-6`}>
         Let us know about your questions or concerns. We’ll get back to you as
         soon as we can.
       </p>
@@ -96,7 +98,7 @@ const ContactForm = () => {
       <form onSubmit={handleSubmit} data-track="contact_form_submit">
         {/* Name */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className={`block ${themeClasses.text} text-sm font-semibold mb-2`}>
             Name
           </label>
           <input
@@ -104,14 +106,14 @@ const ContactForm = () => {
             value={name}
             placeholder="Enter Name"
             onChange={(e) => setName(e.target.value)}
-            className="shadow border rounded w-full py-2 px-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`shadow border rounded w-full py-2 px-3 ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-red-400`}
             required
           />
         </div>
 
         {/* Email */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className={`block ${themeClasses.text} text-sm font-semibold mb-2`}>
             Email
           </label>
           <input
@@ -119,14 +121,14 @@ const ContactForm = () => {
             value={email}
             placeholder="Enter Email"
             onChange={(e) => setEmail(e.target.value)}
-            className="shadow border rounded w-full py-2 px-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`shadow border rounded w-full py-2 px-3 ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-red-400`}
             required
           />
         </div>
 
         {/* Phone Number */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className={`block ${themeClasses.text} text-sm font-semibold mb-2`}>
             Phone Number
           </label>
           <input
@@ -134,14 +136,14 @@ const ContactForm = () => {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Enter Phone Number"
-            className="shadow border rounded w-full py-2 px-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`shadow border rounded w-full py-2 px-3 ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-red-400`}
             required
           />
         </div>
 
         {/* Post Code */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className={`block ${themeClasses.text} text-sm font-semibold mb-2`}>
             Post Code
           </label>
           <input
@@ -149,14 +151,14 @@ const ContactForm = () => {
             value={postcode}
             placeholder="Enter Post Code"
             onChange={(e) => setPostcode(e.target.value)}
-            className="shadow border rounded w-full py-2 px-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`shadow border rounded w-full py-2 px-3 ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-red-400`}
             required
           />
         </div>
 
         {/* Message */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className={`block ${themeClasses.text} text-sm font-semibold mb-2`}>
             Message
           </label>
           <textarea
@@ -164,7 +166,7 @@ const ContactForm = () => {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter Your Message"
             rows="4"
-            className="shadow border rounded w-full py-2 px-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`shadow border rounded w-full py-2 px-3 ${themeClasses.text} focus:outline-none focus:ring-2 focus:ring-red-400`}
             required
           ></textarea>
         </div>
@@ -176,9 +178,9 @@ const ContactForm = () => {
             id="subscribe"
             checked={subscribe}
             onChange={(e) => setSubscribe(e.target.checked)}
-            className="h-4 w-4 text-pink-500 border-gray-300 rounded focus:ring-pink-400"
+            className="h-4 w-4 text-red-500 border-gray-300 rounded focus:ring-red-400"
           />
-          <label htmlFor="subscribe" className="ml-2 text-gray-700 text-sm">
+          <label htmlFor="subscribe" className={`ml-2 ${themeClasses.text} text-sm`}>
             Sign up for our email list for updates, promotions, and more.
           </label>
         </div>
@@ -188,7 +190,7 @@ const ContactForm = () => {
 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
   <button
     type="submit"
-    className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all duration-300"
+    className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-300"
   >
     Submit
   </button>
